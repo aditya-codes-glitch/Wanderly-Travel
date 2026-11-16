@@ -1,0 +1,798 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wanderly — Travel Beyond Limits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:#05090e;
+  --gold:#eac18b;
+  --white:#f8f5ef;
+  --muted:#a9b0bb;
+  --line:#ffffff20;
+}
+* {box-sizing:border-box;margin:0;padding:0}
+html {scroll-behavior:smooth;scroll-padding-top:85px}
+body {
+  background:var(--bg);color:var(--white);
+  font-family:'DM Sans',sans-serif;overflow-x:hidden;
+}
+a {color:inherit;text-decoration:none}
+button,input,select {font:inherit}
+button {cursor:pointer}
+img {display:block;width:100%;object-fit:cover}
+::selection {background:var(--gold);color:#111}
+
+#progress {
+  position:fixed;top:0;left:0;width:0;height:3px;
+  background:var(--gold);z-index:500;
+  box-shadow:0 0 14px var(--gold);
+}
+.container {width:min(1240px,88%);margin:auto}
+.gold {color:var(--gold)}
+.serif {font-family:'Playfair Display',serif}
+.eyebrow {
+  text-transform:uppercase;letter-spacing:4px;
+  font-size:10px;color:var(--gold);font-weight:600;
+}
+h1,h2,h3 {font-family:'Playfair Display',serif;font-weight:500}
+h2 {font-size:clamp(34px,4.5vw,59px);line-height:1.12}
+p {line-height:1.8}
+.btn {
+  display:inline-flex;align-items:center;justify-content:center;gap:13px;
+  padding:14px 23px;border-radius:50px;
+  background:var(--gold);color:#111;font-size:12px;font-weight:700;
+  border:1px solid var(--gold);transition:.3s;
+}
+.btn:hover {background:#f9d9ae;transform:translateY(-3px);box-shadow:0 10px 35px #eac18b35}
+.btn-outline {
+  background:#ffffff0a;color:white;border:1px solid #ffffff45;
+}
+.btn-outline:hover {background:#ffffff1b}
+
+/* NAVIGATION */
+nav {
+  position:fixed;z-index:100;top:0;left:0;width:100%;
+  padding:23px 5%;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid transparent;transition:.4s;
+}
+nav.scrolled {
+  padding-top:15px;padding-bottom:15px;
+  background:#060b11eF;backdrop-filter:blur(20px);
+  border-color:#ffffff13;
+}
+.brand {display:flex;align-items:center;gap:11px}
+.brand-icon {font-size:31px;color:var(--gold)}
+.brand-name {font:600 24px 'Playfair Display',serif;letter-spacing:-1px}
+.brand small {display:block;font-size:8px;letter-spacing:3px;margin-top:3px}
+.nav-links {display:flex;gap:30px;align-items:center}
+.nav-links a {font-size:11px;color:#e1e4e9;transition:.3s}
+.nav-links a:hover {color:var(--gold)}
+.nav-right {display:flex;align-items:center;gap:14px}
+.menu {display:none;color:white;background:none;border:0;font-size:24px}
+
+/* HERO */
+.hero {
+  height:100svh;min-height:720px;max-height:1100px;
+  position:relative;isolation:isolate;overflow:hidden;
+  display:flex;align-items:center;
+}
+.hero-bg {
+  position:absolute;inset:-5%;z-index:-3;
+  background:
+    linear-gradient(90deg,#05090eeb 0%,#05090e99 35%,#05090e05 78%),
+    linear-gradient(0deg,#05090e 0%,transparent 30%,#05090e45 100%),
+    url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2400&q=90') center 50%/cover;
+  transform:scale(1.04);will-change:transform;
+}
+.hero-glow {
+  position:absolute;z-index:-2;right:8%;top:12%;
+  width:40vw;height:40vw;max-width:550px;max-height:550px;
+  border-radius:50%;
+  background:#e7b9820b;filter:blur(45px);pointer-events:none;
+}
+.hero-content {position:relative;padding-top:75px;max-width:730px}
+.hero h1 {
+  font-size:clamp(58px,8.3vw,112px);
+  letter-spacing:-4px;line-height:.99;margin:23px 0;
+}
+.hero h1 em {font-weight:500;color:var(--gold)}
+.hero-description {max-width:440px;color:#e0e2e6;font-size:14px}
+.hero-buttons {display:flex;align-items:center;gap:25px;margin-top:30px}
+.play {
+  display:flex;align-items:center;gap:12px;font-size:12px;
+}
+.play-icon {
+  width:43px;height:43px;display:grid;place-items:center;
+  border:1px solid #ffffff75;border-radius:50%;transition:.3s;
+}
+.play:hover .play-icon {background:var(--gold);color:#111}
+.hero-bottom {
+  position:absolute;bottom:35px;left:6%;right:6%;
+  display:flex;align-items:end;justify-content:space-between;
+}
+.social-proof {display:flex;align-items:center;gap:14px}
+.mini-avatars {display:flex;padding-left:5px}
+.mini-avatars img {
+  width:34px;height:34px;border-radius:50%;
+  border:2px solid #20252b;margin-left:-6px;
+}
+.social-proof strong {font-size:12px}
+.social-proof p {font-size:10px;color:#bdc1c8}
+.scroll-hint {font-size:10px;letter-spacing:3px;color:#d8d9dc}
+.scroll-hint span {display:block;text-align:center;font-size:24px;margin-top:8px;color:var(--gold)}
+
+/* FEATURED FLOATING PANEL */
+.featured {
+  position:absolute;right:7%;top:25%;
+  width:240px;padding:10px;border-radius:18px;
+  background:#101820a6;backdrop-filter:blur(20px);
+  border:1px solid #ffffff35;
+  box-shadow:0 25px 80px #0007;
+  transform:perspective(900px) rotateY(-7deg);
+  animation:panelFloat 6s ease-in-out infinite;
+}
+.featured-top {display:flex;justify-content:space-between;align-items:center;padding:4px 4px 10px;font-size:10px}
+.hot {background:var(--gold);color:#111;padding:4px 8px;border-radius:5px;font-weight:bold}
+.featured img {height:135px;border-radius:11px}
+.featured h3 {font-size:20px;margin:12px 5px 4px}
+.featured p {font-size:10px;color:var(--muted);margin:0 5px}
+.featured-bottom {display:flex;justify-content:space-between;align-items:center;padding:12px 5px 4px;font-size:10px}
+.featured-bottom strong {font-size:15px;color:var(--gold)}
+@keyframes panelFloat {
+  0%,100% {translate:0 0;rotate:0deg}
+  50% {translate:0 -10px;rotate:.5deg}
+}
+
+/* SEARCH BAR */
+.search-area {position:relative;z-index:5;margin-top:-38px}
+.search-bar {
+  display:grid;grid-template-columns:1.25fr 1fr 1fr auto;
+  align-items:center;gap:0;padding:12px;
+  background:#0a1018ed;border:1px solid #ffffff30;
+  border-radius:18px;backdrop-filter:blur(24px);
+  box-shadow:0 20px 70px #0007;
+}
+.search-field {display:flex;align-items:center;gap:13px;padding:8px 22px;border-right:1px solid #ffffff20}
+.search-field .symbol {font-size:21px;color:var(--gold)}
+.search-field label {display:block;color:#aab0ba;font-size:10px;margin-bottom:5px}
+.search-field input,.search-field select {
+  color:white;background:transparent;border:0;outline:none;
+  width:100%;font-size:12px;
+}
+.search-field input::placeholder {color:#c3c7ce}
+.search-field select option {background:#101820;color:white}
+.search-bar .btn {margin-left:10px}
+
+/* SHARED SECTIONS */
+section {position:relative}
+.section {padding:120px 0}
+.heading-row {
+  display:flex;justify-content:space-between;align-items:end;
+  gap:25px;margin-bottom:40px;
+}
+.heading-row p {max-width:340px;color:var(--muted);font-size:12px}
+.heading-row h2 {margin-top:15px}
+.controls {display:flex;gap:8px}
+.arrow {
+  width:43px;height:43px;border-radius:50%;
+  color:white;background:#ffffff08;border:1px solid #ffffff35;
+  transition:.3s;
+}
+.arrow:hover {background:var(--gold);color:#111;border-color:var(--gold)}
+
+/* DESTINATIONS */
+.destinations {overflow:hidden}
+.destinations::before {
+  content:"";position:absolute;top:0;left:-15%;
+  width:500px;height:500px;background:#172f4319;filter:blur(100px);pointer-events:none;
+}
+.destination-grid {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;
+}
+.destination {
+  height:390px;position:relative;overflow:hidden;border-radius:15px;
+  border:1px solid #ffffff25;transform-style:preserve-3d;
+  transition:border-color .3s,box-shadow .3s;will-change:transform;
+  background:#111923;
+}
+.destination:hover {border-color:#eac18b99;box-shadow:0 20px 60px #0006}
+.destination img {height:100%;transition:transform .7s}
+.destination:hover img {transform:scale(1.09)}
+.destination::after {
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(0deg,#03070cf5 0%,#03070c30 45%,transparent 100%);
+  pointer-events:none;
+}
+.destination-number {
+  position:absolute;top:15px;right:15px;z-index:2;
+  font-size:10px;letter-spacing:2px;color:white;
+}
+.destination-info {
+  position:absolute;z-index:2;bottom:20px;left:17px;right:17px;
+  transform:translateZ(20px);
+}
+.destination-info small {font-size:9px;color:var(--gold);letter-spacing:2px}
+.destination-info h3 {font-size:27px;margin:8px 0}
+.destination-meta {
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:13px;border-top:1px solid #ffffff40;font-size:10px;
+}
+.destination-meta strong {color:var(--gold);font-weight:500}
+.destination-meta a {font-size:20px}
+
+/* EXPERIENCE */
+.experience {
+  background:linear-gradient(180deg,#0a1119,#070b11);
+  border-top:1px solid #ffffff10;border-bottom:1px solid #ffffff10;
+  overflow:hidden;
+}
+.experience-grid {
+  display:grid;grid-template-columns:1.1fr .9fr;
+  gap:85px;align-items:center;
+}
+.photo-stack {position:relative;perspective:1000px;padding:15px 20px 35px 0}
+.photo-main {
+  height:470px;border-radius:17px;overflow:hidden;
+  border:1px solid #ffffff20;transform:rotateY(5deg) rotateX(2deg);
+  box-shadow:25px 25px 70px #0008;
+}
+.photo-main img {height:100%;transition:transform .8s}
+.photo-stack:hover .photo-main img {transform:scale(1.06)}
+.photo-small {
+  position:absolute;width:46%;height:185px;right:-10px;bottom:0;
+  border:6px solid #090e15;border-radius:15px;
+  overflow:hidden;transform:rotateY(-7deg) rotateX(3deg);
+  box-shadow:0 20px 50px #0008;
+}
+.photo-small img {height:100%}
+.photo-badge {
+  position:absolute;top:45px;left:-20px;padding:15px 19px;
+  background:#111923eF;border:1px solid #ffffff25;
+  backdrop-filter:blur(18px);border-radius:12px;
+}
+.photo-badge strong {font-size:20px;color:var(--gold);display:block}
+.photo-badge small {font-size:10px;color:var(--muted)}
+.experience-copy {color:var(--muted);font-size:13px;margin:22px 0}
+.benefits {display:grid;grid-template-columns:1fr 1fr;gap:25px;margin:32px 0}
+.benefit {border-top:1px solid #ffffff24;padding-top:15px}
+.benefit .icon {font-size:22px;color:var(--gold)}
+.benefit h3 {font:500 15px 'DM Sans',sans-serif;margin:12px 0 6px}
+.benefit p {font-size:11px;color:var(--muted)}
+
+/* CINEMATIC BANNER */
+.banner {
+  min-height:530px;display:flex;align-items:center;
+  background:
+    linear-gradient(90deg,#05090edb,#05090e35 85%),
+    linear-gradient(0deg,#05090e90,transparent 55%),
+    url('https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=2200&q=90') center/cover fixed;
+}
+.banner h2 {font-size:clamp(42px,6vw,75px);margin:20px 0}
+.banner p {color:#e1e3e8;max-width:420px;font-size:13px;margin-bottom:27px}
+
+/* TESTIMONIALS */
+.reviews {display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.review {
+  padding:27px;border-radius:14px;background:linear-gradient(145deg,#121b26,#090e15);
+  border:1px solid #ffffff15;transition:transform .3s,border-color .3s;
+}
+.review:hover {transform:translateY(-6px);border-color:#eac18b55}
+.stars {color:var(--gold);letter-spacing:3px;font-size:12px}
+.review blockquote {font-size:13px;line-height:1.9;color:#d0d5dd;margin:20px 0 25px}
+.review-user {display:flex;align-items:center;gap:12px}
+.review-user img {width:43px;height:43px;border-radius:50%}
+.review-user strong {font-size:12px;display:block}
+.review-user small {color:var(--muted);font-size:10px}
+
+/* CTA */
+.cta-wrap {padding:40px 0 100px}
+.cta {
+  position:relative;overflow:hidden;text-align:center;padding:85px 25px;
+  border-radius:22px;border:1px solid #ffffff25;
+  background:
+    radial-gradient(ellipse at 50% 120%,#b58c4938,transparent 55%),
+    linear-gradient(135deg,#111b25,#080d14);
+}
+.cta::before {
+  content:"✦";position:absolute;left:10%;top:10%;
+  font-size:50px;color:#eac18b22;
+}
+.cta::after {
+  content:"✧";position:absolute;right:10%;bottom:10%;
+  font-size:65px;color:#eac18b22;
+}
+.cta h2 {margin:18px 0}
+.cta p {color:var(--muted);font-size:13px;margin-bottom:25px}
+
+/* FOOTER */
+footer {border-top:1px solid #ffffff15;padding:32px 0}
+.footer-inner {display:flex;align-items:center;justify-content:space-between;gap:20px}
+.footer-links {display:flex;gap:23px;flex-wrap:wrap}
+.footer-links a,footer p {font-size:10px;color:var(--muted)}
+.footer-links a:hover {color:var(--gold)}
+
+/* SCROLL REVEALS */
+.reveal {opacity:0;transform:translateY(32px);transition:opacity .8s,transform .8s}
+.reveal.visible {opacity:1;transform:translateY(0)}
+.d1 {transition-delay:.1s}.d2 {transition-delay:.2s}.d3 {transition-delay:.3s}
+
+/* LIGHTBOX */
+.modal {
+  display:none;position:fixed;inset:0;z-index:300;
+  background:#020509ed;backdrop-filter:blur(18px);
+  align-items:center;justify-content:center;padding:25px;
+}
+.modal.open {display:flex}
+.modal-box {
+  max-width:700px;width:100%;position:relative;
+  padding:12px;background:#111923;border:1px solid #ffffff25;border-radius:17px;
+}
+.modal-box img {max-height:65vh;border-radius:10px}
+.modal-box p {padding:15px;color:var(--muted);font-size:12px}
+.modal-close {
+  position:absolute;right:15px;top:15px;width:38px;height:38px;
+  border-radius:50%;background:#05090edb;border:1px solid #ffffff50;color:white;
+  font-size:20px;z-index:2;
+}
+
+@media(max-width:1000px) {
+  .featured {right:4%;width:200px;top:28%}
+  .featured img {height:105px}
+  .destination-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .destination {height:370px}
+  .experience-grid {gap:40px}
+  .nav-links {gap:17px}
+}
+@media(max-width:720px) {
+  nav {padding:17px 6%}
+  .brand-name {font-size:21px}
+  .nav-right>.btn {display:none}
+  .menu {display:block}
+  .nav-links {
+    display:none;position:absolute;top:70px;left:5%;width:90%;
+    padding:25px;background:#0c131df5;border:1px solid #ffffff20;
+    border-radius:15px;flex-direction:column;align-items:stretch;gap:22px;
+  }
+  .nav-links.open {display:flex}
+  .nav-links a {font-size:14px}
+  .hero {min-height:850px;height:auto;max-height:none;align-items:flex-start}
+  .hero-bg {
+    background:
+      linear-gradient(90deg,#05090ebf,#05090e55),
+      linear-gradient(0deg,#05090e 0%,transparent 65%),
+      url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=85') 58% center/cover;
+  }
+  .hero-content {padding-top:155px}
+  .hero h1 {font-size:clamp(58px,13vw,88px);letter-spacing:-3px}
+  .hero-description {max-width:350px;font-size:13px}
+  .featured {display:none}
+  .hero-bottom {bottom:25px;align-items:center}
+  .scroll-hint {display:none}
+  .search-area {margin-top:0;padding-top:18px}
+  .search-bar {grid-template-columns:1fr;gap:0;padding:15px}
+  .search-field {border-right:0;border-bottom:1px solid #ffffff17;padding:16px 7px}
+  .search-bar .btn {margin:13px 0 0}
+  .section {padding:80px 0}
+  .heading-row {align-items:start}
+  .heading-row p {display:none}
+  .destination-grid {gap:12px}
+  .destination {height:300px;border-radius:12px}
+  .destination-info {left:12px;right:12px;bottom:13px}
+  .destination-info h3 {font-size:22px}
+  .destination-meta {font-size:9px}
+  .experience-grid {grid-template-columns:1fr;gap:50px}
+  .photo-main {height:360px}
+  .photo-small {height:140px}
+  .photo-badge {left:-5px}
+  .banner {min-height:440px;background-attachment:scroll}
+  .reviews {grid-template-columns:1fr}
+  .cta-wrap {padding-bottom:65px}
+  .cta {padding:65px 20px}
+  .footer-inner {flex-direction:column;text-align:center}
+  .footer-links {justify-content:center}
+}
+@media(max-width:390px) {
+  .container {width:90%}
+  .destination {height:265px}
+  .destination-info h3 {font-size:19px}
+  .destination-meta {flex-wrap:wrap;gap:8px}
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {animation:none!important;scroll-behavior:auto!important;transition:none!important}
+  .reveal {opacity:1;transform:none}
+}
+</style>
+</head>
+
+<body>
+<div id="progress"></div>
+
+<nav id="navbar">
+  <a href="#home" class="brand">
+    <span class="brand-icon">⌁</span>
+    <span class="brand-name">Wanderly<small>TRAVEL BEYOND LIMITS</small></span>
+  </a>
+
+  <div class="nav-links" id="navLinks">
+    <a href="#home">Home</a>
+    <a href="#destinations">Destinations</a>
+    <a href="#experience">Experiences</a>
+    <a href="#stories">Stories</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <div class="nav-right">
+    <a class="btn btn-outline" href="#contact">Plan Your Trip ↗</a>
+    <button class="menu" id="menu" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<header class="hero" id="home">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-glow"></div>
+
+  <div class="container">
+    <div class="hero-content">
+      <p class="eyebrow">Explore · Discover · Experience</p>
+      <h1>The World<br>Awaits <em>You.</em></h1>
+      <p class="hero-description">
+        Unforgettable journeys, breathtaking destinations, and experiences
+        that stay with you forever. Your next story begins beyond the ordinary.
+      </p>
+      <div class="hero-buttons">
+        <a class="btn" href="#destinations">Discover Destinations ↗</a>
+        <a class="play" href="#experience">
+          <span class="play-icon">▶</span> Our Philosophy
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <aside class="featured">
+    <div class="featured-top"><span>Editor's Pick</span><span class="hot">FEATURED</span></div>
+    <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=600&q=85" alt="Tropical Bali landscape">
+    <h3>Bali, Indonesia</h3>
+    <p>★ 4.9 · Island escape</p>
+    <div class="featured-bottom"><span>◷ 7 Days</span><strong>Discover ↗</strong></div>
+  </aside>
+
+  <div class="hero-bottom">
+    <div class="social-proof">
+      <div class="mini-avatars">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="">
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt="">
+        <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=100&q=80" alt="">
+      </div>
+      <div><strong>Made for explorers</strong><p>Find your extraordinary.</p></div>
+    </div>
+    <a href="#destinations" class="scroll-hint">SCROLL TO EXPLORE <span>↓</span></a>
+  </div>
+</header>
+
+<div class="container search-area reveal">
+  <form class="search-bar" id="tripSearch">
+    <div class="search-field">
+      <span class="symbol">⌖</span>
+      <div style="flex:1">
+        <label for="destinationInput">WHERE TO?</label>
+        <input id="destinationInput" placeholder="Search destinations..." list="places" required>
+        <datalist id="places">
+          <option value="Bali, Indonesia">
+          <option value="Santorini, Greece">
+          <option value="Swiss Alps">
+          <option value="Dubai, UAE">
+          <option value="Kyoto, Japan">
+        </datalist>
+      </div>
+    </div>
+    <div class="search-field">
+      <span class="symbol">▦</span>
+      <div style="flex:1">
+        <label for="travelDate">WHEN?</label>
+        <input type="date" id="travelDate" aria-label="Travel date" required>
+      </div>
+    </div>
+    <div class="search-field">
+      <span class="symbol">♙</span>
+      <div style="flex:1">
+        <label for="travelers">TRAVELERS</label>
+        <select id="travelers">
+          <option>1 Traveler</option>
+          <option selected>2 Travelers</option>
+          <option>3 Travelers</option>
+          <option>4 Travelers</option>
+          <option>5+ Travelers</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn" type="submit">Find a Trip →</button>
+  </form>
+</div>
+
+<section class="section destinations" id="destinations">
+  <div class="container">
+    <div class="heading-row reveal">
+      <div>
+        <p class="eyebrow">The art of exploring</p>
+        <h2>Discover Your<br><span class="gold">Next Destination.</span></h2>
+      </div>
+      <div><p>From hidden coastal escapes to spectacular mountain landscapes, find a place that feels like nowhere else.</p></div>
+    </div>
+
+    <div class="destination-grid" id="destinationGrid">
+      <article class="destination reveal" tabindex="0" data-name="Swiss Alps">
+        <img src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=800&q=85" alt="Beautiful Swiss mountain landscape" loading="lazy">
+        <span class="destination-number">01 / EUROPE</span>
+        <div class="destination-info">
+          <small>ALPINE ESCAPE</small><h3>Switzerland</h3>
+          <div class="destination-meta"><span>◷ 7 days</span><strong>From ₹79,999</strong><a href="#contact" aria-label="Plan a Switzerland trip">↗</a></div>
+        </div>
+      </article>
+      <article class="destination reveal d1" tabindex="0" data-name="Santorini, Greece">
+        <img src="https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?auto=format&fit=crop&w=800&q=85" alt="Santorini white architecture beside the sea" loading="lazy">
+        <span class="destination-number">02 / EUROPE</span>
+        <div class="destination-info">
+          <small>COASTAL DREAM</small><h3>Santorini</h3>
+          <div class="destination-meta"><span>◷ 5 days</span><strong>From ₹64,999</strong><a href="#contact" aria-label="Plan a Santorini trip">↗</a></div>
+        </div>
+      </article>
+      <article class="destination reveal d2" tabindex="0" data-name="Bali, Indonesia">
+        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=85" alt="Bali tropical temple and greenery" loading="lazy">
+        <span class="destination-number">03 / ASIA</span>
+        <div class="destination-info">
+          <small>TROPICAL RETREAT</small><h3>Bali</h3>
+          <div class="destination-meta"><span>◷ 6 days</span><strong>From ₹39,999</strong><a href="#contact" aria-label="Plan a Bali trip">↗</a></div>
+        </div>
+      </article>
+      <article class="destination reveal d3" tabindex="0" data-name="Dubai, UAE">
+        <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=85" alt="Dubai skyline at sunset" loading="lazy">
+        <span class="destination-number">04 / MIDDLE EAST</span>
+        <div class="destination-info">
+          <small>MODERN LUXURY</small><h3>Dubai</h3>
+          <div class="destination-meta"><span>◷ 4 days</span><strong>From ₹29,999</strong><a href="#contact" aria-label="Plan a Dubai trip">↗</a></div>
+        </div>
+      </article>
+    </div>
+    <p style="color:var(--muted);font-size:10px;margin-top:18px">Sample package prices for demonstration only. Actual prices depend on dates and inclusions.</p>
+  </div>
+</section>
+
+<section class="section experience" id="experience">
+  <div class="container experience-grid">
+    <div class="photo-stack reveal">
+      <div class="photo-main">
+        <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=90" alt="A scenic road trip through the mountains" loading="lazy">
+      </div>
+      <div class="photo-small">
+        <img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=600&q=85" alt="Wildlife and natural landscapes" loading="lazy">
+      </div>
+      <div class="photo-badge"><strong>Beyond ordinary.</strong><small>Journeys made personal.</small></div>
+    </div>
+
+    <div class="reveal">
+      <p class="eyebrow">The Wanderly difference</p>
+      <h2 style="margin-top:17px">More Than<br>Just a <span class="gold">Trip.</span></h2>
+      <p class="experience-copy">Travel should make you feel more alive. We bring together beautiful destinations, thoughtful planning and meaningful experiences to help you see the world differently.</p>
+
+      <div class="benefits">
+        <div class="benefit"><span class="icon">✧</span><h3>Curated Journeys</h3><p>Trips designed around your interests.</p></div>
+        <div class="benefit"><span class="icon">◎</span><h3>Personal Service</h3><p>Thoughtful help at every stage.</p></div>
+        <div class="benefit"><span class="icon">◇</span><h3>Clear Pricing</h3><p>Understand your trip costs.</p></div>
+        <div class="benefit"><span class="icon">✦</span><h3>Peace of Mind</h3><p>Travel with a considered plan.</p></div>
+      </div>
+      <a class="btn" href="#contact">Create Your Journey ↗</a>
+    </div>
+  </div>
+</section>
+
+<section class="banner">
+  <div class="container reveal">
+    <p class="eyebrow">Leave the ordinary behind</p>
+    <h2>Find Yourself<br><span class="gold">Out There.</span></h2>
+    <p>Chase the sunrise. Wander through the unknown. Collect moments that no photograph can fully capture.</p>
+    <a class="btn" href="#destinations">Explore the World ↗</a>
+  </div>
+</section>
+
+<section class="section" id="stories">
+  <div class="container">
+    <div class="heading-row reveal">
+      <div><p class="eyebrow">Notes from the world</p><h2>Stories Worth<br><span class="gold">Travelling For.</span></h2></div>
+      <div><p>Every destination has a story. Every traveler brings one home.</p></div>
+    </div>
+    <div class="reviews">
+      <article class="review reveal">
+        <div class="stars">★★★★★</div>
+        <blockquote>“The kind of holiday that makes you forget to check your phone. Beautiful places, wonderful memories, and time to simply enjoy the moment.”</blockquote>
+        <div class="review-user"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="" loading="lazy"><div><strong>Riya Sharma</strong><small>Traveler · India</small></div></div>
+      </article>
+      <article class="review reveal d1">
+        <div class="stars">★★★★★</div>
+        <blockquote>“The planning inspiration was exactly what we needed. Our mountain adventure became the highlight of our year.”</blockquote>
+        <div class="review-user"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt="" loading="lazy"><div><strong>Arjun Patel</strong><small>Traveler · India</small></div></div>
+      </article>
+      <article class="review reveal d2">
+        <div class="stars">★★★★★</div>
+        <blockquote>“From the first idea to the final sunset, everything felt considered. We came back with photographs and stories for a lifetime.”</blockquote>
+        <div class="review-user"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=100&q=80" alt="" loading="lazy"><div><strong>Sneha Verma</strong><small>Traveler · India</small></div></div>
+      </article>
+    </div>
+    <p style="font-size:10px;color:var(--muted);margin-top:18px">Demonstration testimonials, not verified customer reviews.</p>
+  </div>
+</section>
+
+<div class="container cta-wrap" id="contact">
+  <div class="cta reveal">
+    <p class="eyebrow">Your next chapter awaits</p>
+    <h2>Somewhere Is<br><span class="gold">Calling You.</span></h2>
+    <p>Choose a direction. We will help you imagine the possibilities.</p>
+    <a class="btn" href="mailto:hello@wanderly.example?subject=My%20Dream%20Trip">Start Your Adventure ↗</a>
+  </div>
+</div>
+
+<footer>
+  <div class="container footer-inner">
+    <a href="#home" class="brand"><span class="brand-icon">⌁</span><span class="brand-name">Wanderly<small>TRAVEL BEYOND LIMITS</small></span></a>
+    <div class="footer-links"><a href="#home">Home</a><a href="#destinations">Destinations</a><a href="#experience">About</a><a href="#stories">Stories</a><a href="#contact">Contact</a></div>
+    <p>© 2026 Wanderly. A travel concept.</p>
+  </div>
+</footer>
+
+<div class="modal" id="imageModal" role="dialog" aria-modal="true" aria-label="Travel image preview">
+  <div class="modal-box">
+    <button class="modal-close" id="closeModal" aria-label="Close preview">×</button>
+    <img id="modalImage" alt="">
+    <p id="modalCaption"></p>
+  </div>
+</div>
+
+<script>
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => [...document.querySelectorAll(selector)];
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = matchMedia('(pointer:fine)').matches;
+
+// NAVIGATION
+const navbar = $('#navbar');
+const menu = $('#menu');
+const navLinks = $('#navLinks');
+
+menu.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  menu.textContent = open ? '×' : '☰';
+  menu.setAttribute('aria-expanded', String(open));
+});
+
+$$('#navLinks a').forEach(a => a.addEventListener('click', () => {
+  navLinks.classList.remove('open');
+  menu.textContent = '☰';
+  menu.setAttribute('aria-expanded', 'false');
+}));
+
+// SCROLL PROGRESS + NAV GLASS + HERO PARALLAX
+let ticking = false;
+function updateScroll() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  $('#progress').style.width = (max > 0 ? scrollY / max * 100 : 0) + '%';
+  navbar.classList.toggle('scrolled', scrollY > 35);
+
+  if (!reduceMotion && scrollY < innerHeight * 1.2) {
+    $('#heroBg').style.transform =
+      `scale(1.04) translate3d(0,${scrollY * 0.12}px,0)`;
+  }
+  ticking = false;
+}
+addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(updateScroll);
+    ticking = true;
+  }
+}, {passive:true});
+updateScroll();
+
+// REVEAL ANIMATIONS
+if ('IntersectionObserver' in window && !reduceMotion) {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.12});
+  $$('.reveal').forEach(el => observer.observe(el));
+} else {
+  $$('.reveal').forEach(el => el.classList.add('visible'));
+}
+
+// 3D DESTINATION TILT
+if (finePointer && !reduceMotion) {
+  $$('.destination').forEach(card => {
+    card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5;
+      const y = (e.clientY - r.top) / r.height - .5;
+      card.style.transform =
+        `perspective(900px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg) translateY(-5px)`;
+    });
+    card.addEventListener('pointerleave', () => {
+      card.style.transform = '';
+    });
+  });
+}
+
+// 3D PHOTO TILT
+if (finePointer && !reduceMotion) {
+  const stack = $('.photo-stack');
+  stack.addEventListener('pointermove', e => {
+    const r = stack.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - .5;
+    const y = (e.clientY - r.top) / r.height - .5;
+    $('.photo-main').style.transform =
+      `rotateY(${5 + x * 8}deg) rotateX(${2 - y * 5}deg)`;
+  });
+  stack.addEventListener('pointerleave', () => {
+    $('.photo-main').style.transform = '';
+  });
+}
+
+// TRIP SEARCH: DEMO INTERACTION
+$('#tripSearch').addEventListener('submit', e => {
+  e.preventDefault();
+  const destination = $('#destinationInput').value.trim();
+  const date = $('#travelDate').value;
+  const travelers = $('#travelers').value;
+
+  if (!destination || !date) return;
+
+  const formattedDate = new Date(date + 'T12:00:00')
+    .toLocaleDateString(undefined, {day:'numeric',month:'long',year:'numeric'});
+
+  alert(
+    'Your trip idea\\n\\nDestination: ' + destination +
+    '\\nDeparture: ' + formattedDate +
+    '\\nTravelers: ' + travelers +
+    '\\n\\nThis is a demo search. Connect a booking service to check real trips.'
+  );
+});
+
+// DATE MINIMUM
+const dateInput = $('#travelDate');
+const now = new Date();
+const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+  .toISOString().slice(0,10);
+dateInput.min = localToday;
+
+// DESTINATION IMAGE PREVIEW
+const modal = $('#imageModal');
+function openPreview(card) {
+  const img = card.querySelector('img');
+  $('#modalImage').src = img.src;
+  $('#modalImage').alt = img.alt;
+  $('#modalCaption').textContent = card.dataset.name;
+  modal.classList.add('open');
+  $('#closeModal').focus();
+}
+$$('.destination').forEach(card => {
+  card.addEventListener('dblclick', () => openPreview(card));
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter') openPreview(card);
+  });
+});
+function closePreview() { modal.classList.remove('open'); }
+$('#closeModal').addEventListener('click', closePreview);
+modal.addEventListener('click', e => {
+  if (e.target === modal) closePreview();
+});
+addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePreview();
+});
+</script>
+</body>
+</html>
